@@ -2,6 +2,11 @@
 
 
 public partial class FirstScreen{
+    public static string GetFilePath(int x){
+        //todo
+        if(x == 1) return  @"C:\Users\hossa\Desktop\todo-app\todo\list.txt";
+        else return "";
+    }
     private static void AddTask(){
         Console.WriteLine("Enter the task that you want to do and write 0 to exit");
         string userInput = Console.ReadLine();
@@ -12,11 +17,9 @@ public partial class FirstScreen{
         }
         else
         {
-            //todo
-            string filePath = @"C:\Users\hossa\Desktop\todo-app\todo\list.txt";
             try
             {
-                using (StreamWriter sw = File.AppendText(filePath))
+                using (StreamWriter sw = File.AppendText(GetFilePath(1)))
                 {
                     sw.WriteLine(userInput);
                 }
@@ -39,7 +42,31 @@ public partial class FirstScreen{
         
     }
     private static void ViewYourTaskList(){
+        List<string> ls = new List<string>();
         
+        if (File.Exists(GetFilePath(1)))
+        {
+            // Open the file with a StreamReader
+            using (StreamReader reader = new StreamReader(GetFilePath(1)))
+            {
+                // Read the file line by line until the end
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    ls.Add(line);
+                }
+            }
+            int i = 1;
+            foreach(string line in ls){
+                Console.WriteLine(i++ + ". " + line);
+            }
+            Console.WriteLine("=========================================");
+            WelcomeScreen();
+        }
+        else
+        {
+            Console.WriteLine("File not found");
+        }
     }
     
     public static void WelcomeScreen(){
@@ -68,6 +95,7 @@ public partial class FirstScreen{
                 return;
             default:
                 Console.WriteLine("You Enter a wrong number");
+                Console.WriteLine("=========================================");
                 WelcomeScreen();
                 break;
         }
