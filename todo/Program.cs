@@ -1,9 +1,37 @@
 ﻿using System.ComponentModel;
 
+
 public partial class FirstScreen{
     private static void AddTask(){
+        Console.WriteLine("Enter the task that you want to do and write 0 to exit");
+        string userInput = Console.ReadLine();
 
+        if (userInput.Replace(" ", "") == "0" || userInput.Replace(" ", "") == "")
+        {
+            WelcomeScreen();
+        }
+        else
+        {
+            //todo
+            string filePath = @"C:\Users\hossa\Desktop\todo-app\todo\list.txt";
+            try
+            {
+                using (StreamWriter sw = File.AppendText(filePath))
+                {
+                    sw.WriteLine(userInput);
+                }
+
+                Console.WriteLine("Task added successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred while writing to the file: " + ex.Message);
+            }
+
+            AddTask();
+        }
     }
+
     private static void DeleteTask(){
         
     }
