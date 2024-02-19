@@ -3,9 +3,13 @@
 
 public partial class FirstScreen{
     public static string GetFilePath(int x){
-        //todo
-        if(x == 1) return  @"C:\Users\hossa\Desktop\todo-app\todo\list.txt";
-        else return @"C:\Users\hossa\Desktop\todo-app\todo\done.txt";
+        string programDirectory = AppDomain.CurrentDomain.BaseDirectory;
+
+        string fileName1 = "list.txt";
+        string fileName2 = "done.txt";
+
+        if(x == 1) {return Path.Combine(programDirectory, fileName1);}
+        else {return Path.Combine(programDirectory, fileName2);}
     }
 
     public static int TakeInput(){
