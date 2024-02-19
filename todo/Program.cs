@@ -7,6 +7,30 @@ public partial class FirstScreen{
         if(x == 1) return  @"C:\Users\hossa\Desktop\todo-app\todo\list.txt";
         else return "";
     }
+
+    public static List<string> CreateList(){
+        List<string> ls = new List<string>();
+        if (File.Exists(GetFilePath(1)))
+        {
+            // Open the file with a StreamReader
+            using (StreamReader reader = new StreamReader(GetFilePath(1)))
+            {
+                // Read the file line by line until the end
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    ls.Add(line);
+                } 
+            }
+        }
+        else
+        {
+            Console.WriteLine("File not found");
+        }
+
+        return ls;
+    }
+
     private static void AddTask(){
         Console.WriteLine("Enter the task that you want to do and write 0 to exit");
         string userInput = Console.ReadLine();
@@ -36,37 +60,55 @@ public partial class FirstScreen{
     }
 
     private static void DeleteTask(){
-        
+        Console.WriteLine("Enter the number of task that you to remove");
+        string[] lines = File.ReadAllLines(GetFilePath(1));
+        for(int i = 0; i < lines.Length; i++){
+            Console.WriteLine(i+1 + ": " + lines[i]);
+        }
+
+        int x = Convert.ToInt32(Console.ReadLine());
+        if(lines.Count() == 0){
+            Console.WriteLine("Your task list is empty");
+        }
+        else if(x <= lines.Length){
+            using (FileStream fs = new FileStream(GetFilePath(1), FileMode.Truncate))
+            {
+                    // Truncate the file by setting its length to 0
+                    fs.SetLength(0);
+            }
+            lines[x-1] = "";
+            for(int i = 0; i < lines.Length; i++){
+                if(lines[i] != ""){
+                    using (StreamWriter sw = File.AppendText(GetFilePath(1)))
+                    {
+                        sw.WriteLine(lines[i]);
+                    }
+                }
+            }
+            Console.WriteLine($"Line {x} deleted successfully.");
+        }
+        else {Console.WriteLine("Invalid Number"); DeleteTask();}
+
+        WelcomeScreen();
     }
+
     private static void MarkTaskAsCompleted(){
         
     }
     private static void ViewYourTaskList(){
         List<string> ls = new List<string>();
-        
-        if (File.Exists(GetFilePath(1)))
-        {
-            // Open the file with a StreamReader
-            using (StreamReader reader = new StreamReader(GetFilePath(1)))
-            {
-                // Read the file line by line until the end
-                string line;
-                while ((line = reader.ReadLine()) != null)
-                {
-                    ls.Add(line);
-                }
-            }
+        ls = CreateList();
+        if(ls.Count == 0){
+            Console.WriteLine("Your list is empty");
+        }
+        else{
             int i = 1;
             foreach(string line in ls){
-                Console.WriteLine(i++ + ". " + line);
+                Console.WriteLine(i++ + ": " + line);
             }
-            Console.WriteLine("=========================================");
-            WelcomeScreen();
         }
-        else
-        {
-            Console.WriteLine("File not found");
-        }
+
+        WelcomeScreen();
     }
     
     public static void WelcomeScreen(){
